@@ -8,7 +8,9 @@
 <style>
 :root{color-scheme:dark;--bg:#0b1220;--surface:#142033;--surface2:#1c2b40;--stroke:#314156;--ink:#ecf2fa;--muted:#a6b7cc;--accent:#75c6d2;--accent2:#e3c387}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#152b3c 0%,var(--bg) 48%);color:var(--ink);font:15px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:1350px;margin:auto;padding:38px 22px 80px}header{margin-bottom:24px}h1{font-size:clamp(24px,4vw,38px);margin:6px 0;font-weight:750;letter-spacing:.01em}h2{font-size:19px;margin:0 0 10px}.eyebrow{letter-spacing:.17em;text-transform:uppercase;font-weight:700;color:var(--accent);font-size:11px}p{margin:8px 0;color:var(--muted)}.lead{max-width:800px}.panel{background:rgba(20,32,51,.96);border:1px solid var(--stroke);border-radius:15px;padding:20px;margin:16px 0;box-shadow:0 9px 30px #0002}.upload{display:block;text-align:center;padding:34px 18px;border:2px dashed #638498;border-radius:13px;cursor:pointer;background:#13293955;transition:.15s}.upload:hover,.upload.over{border-color:var(--accent);background:#19445480}.upload strong{display:block;font-size:19px}.upload span{color:var(--muted)}.upload input{display:none}.notice{border-left:3px solid var(--accent2);padding:10px 13px;background:#1f2835;border-radius:4px;color:#d8d3c4;margin:14px 0}.error{border-left-color:#ff8e8e;color:#ffe0e0}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.stat{padding:15px;border-radius:11px;background:var(--surface2);border:1px solid var(--stroke)}.stat b{display:block;font-size:25px;font-variant-numeric:tabular-nums}.stat span{color:var(--muted);font-size:12px}.filters{display:grid;grid-template-columns:1.35fr 1fr 1.4fr 1fr;gap:14px;align-items:end}.field{min-width:0}.field label{display:block;color:var(--muted);font-size:12px;font-weight:650;margin-bottom:5px}input[type=text],select{width:100%;background:#0b192a;border:1px solid #4a5d71;color:var(--ink);border-radius:9px;padding:11px 12px;font:inherit;min-height:44px}input:focus,select:focus,button:focus-visible,.upload:focus-within{outline:2px solid var(--accent);outline-offset:2px}.actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:14px 0}button{border:1px solid #52687b;background:#23384e;color:var(--ink);padding:9px 13px;border-radius:9px;cursor:pointer;font:inherit;font-weight:650}button:hover{background:#2b4c60}button:disabled{opacity:.5;cursor:not-allowed}.primary{background:#246477;border-color:#4a9fa9}.tablewrap{overflow:auto;max-height:64vh;border:1px solid var(--stroke);border-radius:12px}table{border-collapse:collapse;min-width:840px;width:100%;font-variant-numeric:tabular-nums}th,td{padding:10px 13px;text-align:left;border-bottom:1px solid #2b3c4e;white-space:nowrap}th{position:sticky;top:0;z-index:2;background:#213248;color:#c9ddec;font-size:12px}tbody tr:hover{background:#213749}td.num{text-align:right;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}td.tag{font-family:ui-monospace,Consolas,monospace;font-weight:700;color:var(--accent)}td.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted)}.details{display:grid;grid-template-columns:1fr 1fr;gap:14px}.details>section{min-width:0}.details .tablewrap{max-height:380px}code{color:#b8e1e7}details summary{cursor:pointer;font-weight:700;color:var(--accent)}footer{font-size:12px;color:var(--muted);margin-top:20px}#results[hidden],#detail[hidden]{display:none!important}@media(max-width:850px){.filters{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.details{grid-template-columns:1fr}}@media(max-width:550px){main{padding:20px 12px}.panel{padding:15px}.filters{grid-template-columns:1fr}h1{font-size:26px}}
 </style>
-<style>.metriccards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}.metriccard{background:#1c2b40;border:1px solid #314156;border-radius:9px;padding:13px;display:flex;flex-direction:column;gap:3px}.metriccard strong{font-size:22px;font-variant-numeric:tabular-nums}.metriccard small{color:#859ab1}.metricname{font-size:12px;color:#b9c9d9}.statgroup{margin:18px 0}.statgroup h3{font-size:15px;color:#75c6d2}#overviewPanel[hidden]{display:none}</style></head>
+<style>.metriccards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}.metriccard{background:#1c2b40;border:1px solid #314156;border-radius:9px;padding:13px;display:flex;flex-direction:column;gap:3px}.metriccard strong{font-size:22px;font-variant-numeric:tabular-nums}.metriccard small{color:#859ab1}.metricname{font-size:12px;color:#b9c9d9}.statgroup{margin:18px 0}.statgroup h3{font-size:15px;color:#75c6d2}#overviewPanel[hidden]{display:none}</style><style>
+.comparison{max-height:72vh}.comparison table{width:max-content;min-width:100%;border-collapse:separate;border-spacing:0}.comparison th,.comparison td{padding:8px 12px;border-bottom:1px solid #2b3c4e;border-right:1px solid #2b3c4e}.comparison thead th{position:sticky;top:0;z-index:4;background:#203249;cursor:pointer;user-select:none}.comparison thead th:hover{background:#30516a}.comparison td:nth-child(1),.comparison th:nth-child(1){position:sticky;left:0;z-index:3;background:#16283a;min-width:110px}.comparison thead th:nth-child(1){z-index:6;background:#203249}.comparison td:nth-child(2),.comparison th:nth-child(2){position:sticky;left:110px;z-index:3;background:#16283a;min-width:155px}.comparison thead th:nth-child(2){z-index:6;background:#203249}.comparison tbody tr:hover td{background:#243b4e}.comparison tbody tr:hover td:nth-child(-n+2){background:#243b4e}.comparison .num{min-width:100px}.comparison th .sortmark{font-size:10px;color:#75c6d2}.columnchooser{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px;padding:14px;margin-bottom:12px;border:1px solid #405369;border-radius:10px;max-height:300px;overflow:auto}.columnchooser[hidden]{display:none}.columnchooser label{display:flex;align-items:center;gap:8px;font-size:12px;color:#d9e4ef}.columnchooser input{accent-color:#75c6d2}
+</style></head>
 <body>
 <main>
 <header>
@@ -29,16 +31,17 @@
 <div class="stat"><b id="fields">0</b><span>統計IDの種類</span></div>
 </section>
 <section class="panel">
-<h2>全国家を比較</h2>
-<div class="filters">
+<h2>全国家の統計比較</h2>
+<p>国家を縦、統計を横に並べた比較表。見出しをクリックすると並べ替えできます。</p>
+<div class="filters" style="grid-template-columns:1fr 1fr 1fr">
 <div class="field"><label for="search">国家名・国家タグ</label><input id="search" type="text" placeholder="例：ドイツ / GER"></div>
 <div class="field"><label for="source">記録グループ</label><select id="source"><option value="">すべてのグループ</option></select></div>
-<div class="field"><label for="metric">比較する統計ID</label><select id="metric"></select></div>
-<div class="field"><label for="sort">並べ替え</label><select id="sort"><option value="a-desc">ブロックAの大きい順</option><option value="a-asc">ブロックAの小さい順</option><option value="b-desc">ブロックBの大きい順</option><option value="b-asc">ブロックBの小さい順</option><option value="tag">国家タグ順</option></select></div>
+<div class="field"><label for="metric">統計項目を追加</label><select id="metric"></select></div>
 </div>
-<div class="actions"><span id="count" class="small"></span><button id="download" class="primary" type="button">表示中のデータをCSV保存</button></div>
-<div class="tablewrap"><table><thead><tr><th>国家タグ</th><th>国家名（参考）</th><th>記録グループ</th><th id="hA">数値 A</th><th id="hB">数値 B</th><th>Aの非ゼロ項目</th><th>Bの非ゼロ項目</th><th>詳細</th></tr></thead><tbody id="tbody"></tbody></table></div>
-<p class="small">A/Bはファイル内の2つの数値ブロック（A：累積値、B：単一プレイスルーの最大値）（内部ID <code>0x28DE</code> / <code>0x28DF</code>）です。意味が未解明のため「勝利数」「プレイ回数」といった名称は付けていません。国家タグは同じでも、グループが異なれば別の行として表示します。</p>
+<div class="actions"><span id="count" class="small"></span><button id="columnsToggle" type="button">表示列を選ぶ</button><button id="download" class="primary" type="button">比較表をCSV保存</button></div>
+<div id="columnChooser" class="columnchooser" hidden></div>
+<div class="tablewrap comparison"><table><thead id="compareHead"></thead><tbody id="tbody"></tbody></table></div>
+<p class="small">表示数値は読み込んだ .pr の統計。国名は参考訳。未解読の統計は追加列の選択欄に内部IDで表示します。詳細・生データは各国家の行から確認できます。</p>
 </section>
 <section id="overviewPanel" class="panel" hidden><div class="actions"><h2 id="overviewTitle">国家別の統計</h2><button id="overviewClose" type="button">閉じる</button></div><p class="small">スクリーンショットの数値と照合した統計を表示しています。年代別建設割合は該当期間の民需・軍需・造船所・ロケット発射場の建設数から計算します。軍事生産割合とドクトリン割合は引き続き検証対象です。</p><div id="overview"></div></section><section id="detail" class="panel" hidden>
 <div class="actions"><h2 id="detailtitle">詳細</h2><button id="close" type="button">閉じる</button></div>
@@ -188,25 +191,47 @@ function populateMetrics(){
  $("fields").textContent=metrics.length.toLocaleString("ja-JP");
 }
 function rowCell(tr,txt,cls){const td=document.createElement("td");td.textContent=txt;if(cls)td.className=cls;tr.append(td);return td}
+
+let selectedColumns=["playthroughs","playtime","gameMonths","warYears","conquest","liberated","factories","ships","tanks","attack","defense","largestBattle","maxEnemyDeaths"];
+let sortColumn="playthroughs",sortDescending=true;
+const columnDefs=[
+["playthroughs","プレイ回数",0x3e2b,"count"],["playtime","プレイ時間",0x3e2a,"hours"],["gameMonths","ゲーム内時間",0x3e3c,"months"],["warYears","戦争中の年数",0x3e9f,"warYears"],["conquest","世界征服率",0x3e2e,"conquest"],["liberated","解放した国家",0x3e2f,"count"],["factories","建設した工場",0x3e32,"count"],["ships","建造した艦艇",0x3e28,"count"],["tanks","製造した戦車",0x3e29,"count"],["attack","侵略戦",0x3e54,"count"],["defense","防衛戦",0x3e55,"count"],["largestBattle","最大の戦闘",0x3e3f,"max"],["maxEnemyDeaths","敵死亡者最多",0x3e25,"max"]];
+function allColumns(){return [...columnDefs,...metrics.filter(k=>!columnDefs.some(x=>x[2]===k)).map(k=>["raw"+k,metricLabel(k),k,"raw"])]}
+function columnValue(r,col){const [id,,key,type]=col;const obj=type==="max"?r.b:r.a;return Number(obj[key]||0)}
+function columnText(r,col){
+ const n=columnValue(r,col),type=col[3];
+ if(type==="hours")return Math.floor(n/3600).toLocaleString("ja-JP");
+ if(type==="months")return (Math.floor(n/12)).toLocaleString("ja-JP")+"年"+n%12+"か月";
+ if(type==="warYears")return Math.floor(n/8760).toLocaleString("ja-JP");
+ if(type==="conquest")return (n/10).toFixed(1)+"%";
+ return n.toLocaleString("ja-JP");
+}
+function makeColumns(){
+ const choices=allColumns(),selector=$("metric"),chooser=$("columnChooser");
+ selector.replaceChildren(new Option("列を追加…",""),...choices.filter(c=>!selectedColumns.includes(c[0])).map(c=>new Option(c[1],c[0])));
+ chooser.replaceChildren();
+ for(const col of choices){
+  const label=document.createElement("label"),check=document.createElement("input");check.type="checkbox";check.checked=selectedColumns.includes(col[0]);
+  check.addEventListener("change",()=>{if(check.checked){selectedColumns.push(col[0])}else{selectedColumns=selectedColumns.filter(x=>x!==col[0])}makeColumns();draw()});
+  label.append(check,document.createTextNode(col[1]));chooser.append(label);
+ }
+}
 function draw(){
- const q=$("search").value.trim().toLowerCase(),source=$("source").value,metric=Number($("metric").value),sort=$("sort").value;
+ const q=$("search").value.trim().toLowerCase(),source=$("source").value,columns=allColumns(),selected=selectedColumns.map(id=>columns.find(c=>c[0]===id)).filter(Boolean);
  visible=records.filter(r=>(!source||source===r.groupId)&&(!q||r.tag.toLowerCase().includes(q)||(names[r.tag]||"").toLowerCase().includes(q)));
- visible.sort((a,b)=>{
-  if(sort==="tag")return a.tag.localeCompare(b.tag)||a.group.localeCompare(b.group);
-  const block=sort.startsWith("b-")?"b":"a";const av=asNumber(val(a[block],metric)),bv=asNumber(val(b[block],metric));
-  if(av===bv)return a.tag.localeCompare(b.tag);return (av>bv?1:-1)*(sort.endsWith("desc")?-1:1);
- });
- $("hA").textContent=hex(metric)+" / A";
- $("hB").textContent=hex(metric)+" / B";
- $("count").textContent=visible.length+" 件表示（最大 1500 行）";
- const body=$("tbody");body.replaceChildren();
- const fragment=document.createDocumentFragment();
- visible.slice(0,1500).forEach(r=>{
-  const tr=document.createElement("tr");
-  rowCell(tr,r.tag,"tag");rowCell(tr,names[r.tag]||"名称未登録","muted");rowCell(tr,r.group);rowCell(tr,val(r.a,metric),"num");rowCell(tr,val(r.b,metric),"num");rowCell(tr,String(nonzero(r.a)),"num");rowCell(tr,String(nonzero(r.b)),"num");
-  const td=document.createElement("td"),btn=document.createElement("button");btn.type="button";btn.textContent="統計を見る";btn.addEventListener("click",()=>renderOverview(r));td.append(btn);const raw=document.createElement("button");raw.type="button";raw.textContent="生データ";raw.addEventListener("click",()=>showDetail(r));raw.style.marginLeft="6px";td.append(raw);tr.append(td);fragment.append(tr);
- });
- body.append(fragment);
+ const sortDef=columns.find(c=>c[0]===sortColumn);
+ visible.sort((a,b)=>{if(!sortDef)return a.tag.localeCompare(b.tag);const x=columnValue(a,sortDef),y=columnValue(b,sortDef);return (x===y?a.tag.localeCompare(b.tag):(x>y?1:-1)*(sortDescending?-1:1))});
+ $("count").textContent=visible.length+" 国家別レコード";
+ const thead=$("compareHead"),head=document.createElement("tr");thead.replaceChildren();
+ function th(text,key){const el=document.createElement("th");el.textContent=text;if(key){const mark=document.createElement("span");mark.className="sortmark";mark.textContent=sortColumn===key?(sortDescending?" ▼":" ▲"):"";el.append(mark);el.addEventListener("click",()=>{if(sortColumn===key)sortDescending=!sortDescending;else{sortColumn=key;sortDescending=true}draw()})}head.append(el)}
+ th("国家タグ");th("国家名");th("記録グループ");
+ for(const col of selected)th(col[1],col[0]);
+ th("詳細");thead.append(head);
+ const body=$("tbody"),frag=document.createDocumentFragment();body.replaceChildren();
+ for(const r of visible){const tr=document.createElement("tr");rowCell(tr,r.tag,"tag");rowCell(tr,names[r.tag]||r.tag,"muted");rowCell(tr,r.group);
+ for(const col of selected)rowCell(tr,columnText(r,col),"num");
+ const td=document.createElement("td"),a=document.createElement("button"),b=document.createElement("button");a.textContent="統計";b.textContent="生データ";a.onclick=()=>renderOverview(r);b.onclick=()=>showDetail(r);td.append(a,b);tr.append(td);frag.append(tr)}
+ body.append(frag);
 }
 function showDetail(r){
  $("detailtitle").textContent=r.tag+" / "+(names[r.tag]||"国家名未登録")+" / "+r.group;
@@ -215,12 +240,11 @@ function showDetail(r){
 }
 function csvCell(v){return '"'+String(v).replaceAll('"','""')+'"'}
 function downloadCSV(){
- const metric=Number($("metric").value);
- const header=["国家タグ","国家名(参考)","記録グループ","統計ID","統計名",hex(metric)+"_A",hex(metric)+"_B","A非ゼロ項目数","B非ゼロ項目数"];
- const rows=[header,...visible.map(r=>[r.tag,names[r.tag]||"",r.group,hex(metric),statisticLabels[metric.toString(16)]?.[0]||"未特定",val(r.a,metric),val(r.b,metric),nonzero(r.a),nonzero(r.b)])];
+ const cols=allColumns().filter(c=>selectedColumns.includes(c[0]));
+ const rows=[["国家タグ","国家名","記録グループ",...cols.map(c=>c[1])],...visible.map(r=>[r.tag,names[r.tag]||r.tag,r.group,...cols.map(c=>columnText(r,c))])];
  const content="\ufeff"+rows.map(row=>row.map(csvCell).join(",")).join("\r\n");
- const url=URL.createObjectURL(new Blob([content],{type:"text/csv;charset=utf-8;"}));
- const a=document.createElement("a");a.href=url;a.download="hoi4-career-profile-"+activeFile.replace(/[^a-zA-Z0-9_-]/g,"_")+".csv";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ const url=URL.createObjectURL(new Blob([content],{type:"text/csv;charset=utf-8"}));
+ const a=document.createElement("a");a.href=url;a.download="hoi4-career-comparison.csv";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 async function load(file){
  if(!file)return;
@@ -236,7 +260,7 @@ async function load(file){
   $("total").textContent=records.length.toLocaleString("ja-JP");
   $("countries").textContent=new Set(records.map(r=>r.tag)).size.toLocaleString("ja-JP");
   $("groups").textContent=new Set(records.map(r=>r.groupId)).size.toLocaleString("ja-JP");
-  sourceOptions();populateMetrics();$("search").value="";$("sort").value="a-desc";$("results").hidden=false;draw();
+  sourceOptions();populateMetrics();makeColumns();$("search").value="";$("results").hidden=false;draw();
   setMessage("読み込み成功： "+file.name+"。国家タグ付きレコード "+records.length+" 件、国家タグ "+new Set(records.map(r=>r.tag)).size+" 種。生の数値データを表示しています。",false);
  }catch(e){console.error(e);setMessage("読み込み失敗： "+(e&&e.message?e.message:String(e)),true)}
 }
@@ -245,7 +269,7 @@ const drop=$("drop");
 for(const name of ["dragenter","dragover"])drop.addEventListener(name,e=>{e.preventDefault();drop.classList.add("over")});
 for(const name of ["dragleave","drop"])drop.addEventListener(name,e=>{e.preventDefault();drop.classList.remove("over")});
 drop.addEventListener("drop",e=>{const f=e.dataTransfer.files[0];load(f)});
-for(const id of ["search","source","metric","sort"])$(id).addEventListener(id==="search"?"input":"change",draw);
+for(const id of ["search","source"])$(id).addEventListener(id==="search"?"input":"change",draw);$("metric").addEventListener("change",v=>{const id=$("metric").value;if(id&&!selectedColumns.includes(id)){selectedColumns.push(id);makeColumns();draw()}});$("columnsToggle").addEventListener("click",()=>{$("columnChooser").hidden=!$("columnChooser").hidden});
 $("download").addEventListener("click",downloadCSV);
 $("close").addEventListener("click",()=>{$("detail").hidden=true});$("overviewClose").addEventListener("click",()=>{$("overviewPanel").hidden=true});
 })();
