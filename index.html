@@ -34,7 +34,7 @@
 <div class="field"><label for="search">国家名・国家タグ</label><input id="search" type="text" placeholder="例：ドイツ / GER"></div>
 <div class="field"><label for="source">記録グループ</label><select id="source"><option value="">すべてのグループ</option></select></div>
 <div class="field"><label for="metric">比較する統計ID</label><select id="metric"></select></div>
-<div class="field"><label for="sort">並べ替え</label><select id="sort"><option value="desc">統計値の大きい順</option><option value="asc">統計値の小さい順</option><option value="tag">国家タグ順</option></select></div>
+<div class="field"><label for="sort">並べ替え</label><select id="sort"><option value="a-desc">ブロックAの大きい順</option><option value="a-asc">ブロックAの小さい順</option><option value="b-desc">ブロックBの大きい順</option><option value="b-asc">ブロックBの小さい順</option><option value="tag">国家タグ順</option></select></div>
 </div>
 <div class="actions"><span id="count" class="small"></span><button id="download" class="primary" type="button">表示中のデータをCSV保存</button></div>
 <div class="tablewrap"><table><thead><tr><th>国家タグ</th><th>国家名（参考）</th><th>記録グループ</th><th id="hA">数値 A</th><th id="hB">数値 B</th><th>Aの非ゼロ項目</th><th>Bの非ゼロ項目</th><th>詳細</th></tr></thead><tbody id="tbody"></tbody></table></div>
@@ -116,8 +116,8 @@ function groupedRows(root){
    data.push({tag,group:label,groupId,a:convert(blockA),b:convert(blockB)});
   }
  }
- insertFromGroup(field(field(root,0x3eae),0xf0),"通常グループ A","A");
- insertFromGroup(field(field(root,0x3eb0),0xf0),"通常グループ B","B");
+ insertFromGroup(field(field(root,0x3eae),0xf0),"データ群 A","A");
+ insertFromGroup(field(field(root,0x3eb0),0xf0),"データ群 B","B");
  const mods=field(root,0x3eaf);
  if(Array.isArray(mods)){
   for(let j=0;j<mods.length;j++){
@@ -151,8 +151,8 @@ function draw(){
  visible=records.filter(r=>(!source||source===r.groupId)&&(!q||r.tag.toLowerCase().includes(q)||(names[r.tag]||"").toLowerCase().includes(q)));
  visible.sort((a,b)=>{
   if(sort==="tag")return a.tag.localeCompare(b.tag)||a.group.localeCompare(b.group);
-  const av=asNumber(val(a.a,metric))+asNumber(val(a.b,metric)),bv=asNumber(val(b.a,metric))+asNumber(val(b.b,metric));
-  if(av===bv)return a.tag.localeCompare(b.tag);return (av>bv?1:-1)*(sort==="desc"?-1:1);
+  const block=sort.startsWith("b-")?"b":"a";const av=asNumber(val(a[block],metric)),bv=asNumber(val(b[block],metric));
+  if(av===bv)return a.tag.localeCompare(b.tag);return (av>bv?1:-1)*(sort.endsWith("desc")?-1:1);
  });
  $("hA").textContent=hex(metric)+" / A";
  $("hB").textContent=hex(metric)+" / B";
@@ -194,7 +194,7 @@ async function load(file){
   $("total").textContent=records.length.toLocaleString("ja-JP");
   $("countries").textContent=new Set(records.map(r=>r.tag)).size.toLocaleString("ja-JP");
   $("groups").textContent=new Set(records.map(r=>r.groupId)).size.toLocaleString("ja-JP");
-  sourceOptions();populateMetrics();$("search").value="";$("sort").value="desc";$("results").hidden=false;draw();
+  sourceOptions();populateMetrics();$("search").value="";$("sort").value="a-desc";$("results").hidden=false;draw();
   setMessage("読み込み成功： "+file.name+"。国家タグ付きレコード "+records.length+" 件、国家タグ "+new Set(records.map(r=>r.tag)).size+" 種。生の数値データを表示しています。",false);
  }catch(e){console.error(e);setMessage("読み込み失敗： "+(e&&e.message?e.message:String(e)),true)}
 }
