@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>HoI4 キャリアプロフィール 一括ビューア</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--surface:#142033;--surface2:#1c2b40;--stroke:#314156;--ink:#ecf2fa;--muted:#a6b7cc;--accent:#75c6d2;--accent2:#e3c387}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#152b3c 0%,var(--bg) 48%);color:var(--ink);font:15px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:1350px;margin:auto;padding:38px 22px 80px}header{margin-bottom:24px}h1{font-size:clamp(24px,4vw,38px);margin:6px 0;font-weight:750;letter-spacing:.01em}h2{font-size:19px;margin:0 0 10px}.eyebrow{letter-spacing:.17em;text-transform:uppercase;font-weight:700;color:var(--accent);font-size:11px}p{margin:8px 0;color:var(--muted)}.lead{max-width:800px}.panel{background:rgba(20,32,51,.96);border:1px solid var(--stroke);border-radius:15px;padding:20px;margin:16px 0;box-shadow:0 9px 30px #0002}.upload{display:block;text-align:center;padding:34px 18px;border:2px dashed #638498;border-radius:13px;cursor:pointer;background:#13293955;transition:.15s}.upload:hover,.upload.over{border-color:var(--accent);background:#19445480}.upload strong{display:block;font-size:19px}.upload span{color:var(--muted)}.upload input{display:none}.notice{border-left:3px solid var(--accent2);padding:10px 13px;background:#1f2835;border-radius:4px;color:#d8d3c4;margin:14px 0}.error{border-left-color:#ff8e8e;color:#ffe0e0}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.stat{padding:15px;border-radius:11px;background:var(--surface2);border:1px solid var(--stroke)}.stat b{display:block;font-size:25px;font-variant-numeric:tabular-nums}.stat span{color:var(--muted);font-size:12px}.filters{display:grid;grid-template-columns:1.35fr 1fr 1.4fr 1fr;gap:14px;align-items:end}.field{min-width:0}.field label{display:block;color:var(--muted);font-size:12px;font-weight:650;margin-bottom:5px}input[type=text],select{width:100%;background:#0b192a;border:1px solid #4a5d71;color:var(--ink);border-radius:9px;padding:11px 12px;font:inherit;min-height:44px}input:focus,select:focus,button:focus-visible,.upload:focus-within{outline:2px solid var(--accent);outline-offset:2px}.actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:14px 0}button{border:1px solid #52687b;background:#23384e;color:var(--ink);padding:9px 13px;border-radius:9px;cursor:pointer;font:inherit;font-weight:650}button:hover{background:#2b4c60}button:disabled{opacity:.5;cursor:not-allowed}.primary{background:#246477;border-color:#4a9fa9}.tablewrap{overflow:auto;max-height:64vh;border:1px solid var(--stroke);border-radius:12px}table{border-collapse:collapse;min-width:840px;width:100%;font-variant-numeric:tabular-nums}th,td{padding:10px 13px;text-align:left;border-bottom:1px solid #2b3c4e;white-space:nowrap}th{position:sticky;top:0;z-index:2;background:#213248;color:#c9ddec;font-size:12px}tbody tr:hover{background:#213749}td.num{text-align:right;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}td.tag{font-family:ui-monospace,Consolas,monospace;font-weight:700;color:var(--accent)}td.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted)}.details{display:grid;grid-template-columns:1fr 1fr;gap:14px}.details>section{min-width:0}.details .tablewrap{max-height:380px}code{color:#b8e1e7}details summary{cursor:pointer;font-weight:700;color:var(--accent)}footer{font-size:12px;color:var(--muted);margin-top:20px}#results[hidden],#detail[hidden]{display:none!important}@media(max-width:850px){.filters{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.details{grid-template-columns:1fr}}@media(max-width:550px){main{padding:20px 12px}.panel{padding:15px}.filters{grid-template-columns:1fr}h1{font-size:26px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="eyebrow">Hearts of Iron IV / Local profile reader</div>
+<h1>キャリアプロフィール 一括ビューア</h1>
+<p class="lead">キャリアプロフィールの <code>.pr</code> ファイルから、国家タグ付きの統計レコードを一度に一覧表示。国家の検索、数値による並べ替え、CSV出力に対応しています。</p>
+</header>
+<section class="panel">
+<label id="drop" class="upload"><input id="file" type="file" accept=".pr,application/octet-stream"><strong>ここに .pr ファイルをドロップ</strong><span>またはクリックしてファイルを選択</span></label>
+<p class="small">すべてブラウザ内で処理します。読み込んだキャリアプロフィールはGitHubや外部サーバーに送信されません。</p>
+<div id="message" class="notice" role="status">対応形式：今回確認した <code>career_profile_…_v3.pr</code> のバイナリ構造。統計名と内部IDの対応は未検証です。</div>
+</section>
+<div id="results" hidden>
+<section class="stats" aria-label="ファイル概要">
+<div class="stat"><b id="total">0</b><span>国家タグ付きレコード</span></div>
+<div class="stat"><b id="countries">0</b><span>異なる国家タグ</span></div>
+<div class="stat"><b id="groups">0</b><span>記録グループ</span></div>
+<div class="stat"><b id="fields">0</b><span>統計IDの種類</span></div>
+</section>
+<section class="panel">
+<h2>全国家を比較</h2>
+<div class="filters">
+<div class="field"><label for="search">国家名・国家タグ</label><input id="search" type="text" placeholder="例：ドイツ / GER"></div>
+<div class="field"><label for="source">記録グループ</label><select id="source"><option value="">すべてのグループ</option></select></div>
+<div class="field"><label for="metric">比較する統計ID</label><select id="metric"></select></div>
+<div class="field"><label for="sort">並べ替え</label><select id="sort"><option value="desc">統計値の大きい順</option><option value="asc">統計値の小さい順</option><option value="tag">国家タグ順</option></select></div>
+</div>
+<div class="actions"><span id="count" class="small"></span><button id="download" class="primary" type="button">表示中のデータをCSV保存</button></div>
+<div class="tablewrap"><table><thead><tr><th>国家タグ</th><th>国家名（参考）</th><th>記録グループ</th><th id="hA">数値 A</th><th id="hB">数値 B</th><th>Aの非ゼロ項目</th><th>Bの非ゼロ項目</th><th>詳細</th></tr></thead><tbody id="tbody"></tbody></table></div>
+<p class="small">A/Bはファイル内の2つの数値ブロック（内部ID <code>0x28DE</code> / <code>0x28DF</code>）です。意味が未解明のため「勝利数」「プレイ回数」といった名称は付けていません。国家タグは同じでも、グループが異なれば別の行として表示します。</p>
+</section>
+<section id="detail" class="panel" hidden>
+<div class="actions"><h2 id="detailtitle">詳細</h2><button id="close" type="button">閉じる</button></div>
+<p class="small">ゲーム内表示と照合するための内部ID一覧です。IDは16進数表記。64ビット値は符号なし整数の生値で、表示単位は未解明です。</p>
+<div class="details"><section><h2>統計ブロック A</h2><div class="tablewrap"><table><thead><tr><th>内部ID</th><th>生データ</th></tr></thead><tbody id="detailA"></tbody></table></div></section><section><h2>統計ブロック B</h2><div class="tablewrap"><table><thead><tr><th>内部ID</th><th>生データ</th></tr></thead><tbody id="detailB"></tbody></table></div></section></div>
+</section>
+</div>
+<footer>非公式の解析ツールです。Paradox Interactiveとは関係ありません。元の .pr ファイルは変更しません。</footer>
+</main>
+<script>
+"use strict";
+(function(){
+const $=id=>document.getElementById(id);
+const names={GER:"ドイツ",JAP:"日本",ITA:"イタリア",SOV:"ソビエト連邦",USA:"アメリカ",ENG:"イギリス",FRA:"フランス",VIC:"ヴィシー・フランス",POL:"ポーランド",CHI:"中華民国",PRC:"中国共産党",MAN:"満州国",MEN:"蒙古聯合自治政府",ROM:"ルーマニア",HUN:"ハンガリー",BUL:"ブルガリア",FIN:"フィンランド",SWE:"スウェーデン",NOR:"ノルウェー",DEN:"デンマーク",ICE:"アイスランド",SWI:"スイス",AUS:"オーストリア",CZE:"チェコスロバキア",YUG:"ユーゴスラビア",GRE:"ギリシャ",TUR:"トルコ",TAN:"タンヌ・トゥヴァ",MON:"モンゴル",NKO:"北朝鮮",IRQ:"イラク",ALB:"アルバニア",HOL:"オランダ",BEL:"ベルギー",LUX:"ルクセンブルク",POR:"ポルトガル",SPR:"スペイン",SPA:"スペイン国",CAN:"カナダ",AST:"オーストラリア",NZL:"ニュージーランド",RAJ:"イギリス領インド",BRA:"ブラジル",MEX:"メキシコ",ARG:"アルゼンチン",PER:"ペルー",CHL:"チリ",ETH:"エチオピア",SAF:"南アフリカ",SIA:"シャム",PHI:"フィリピン",INS:"インドネシア",MAL:"マラヤ",AFG:"アフガニスタン",SAU:"サウジアラビア",ISR:"イスラエル",KOR:"韓国",GXC:"広西軍閥",YUN:"雲南軍閥",SHX:"山西軍閥",XSM:"馬家軍閥",SIK:"新疆"};
+let records=[],visible=[],metrics=[],activeFile="";
+const hex=id=>"0x"+id.toString(16).toUpperCase().padStart(4,"0");
+function setMessage(s,error){const el=$("message");el.textContent=s;el.classList.toggle("error",!!error)}
+function readTokens(buffer){
+ const v=new DataView(buffer),out=[];let p=0;
+ const decoder=new TextDecoder("utf-8",{fatal:false});
+ while(p<v.byteLength){
+  if(p+2>v.byteLength)throw Error("末尾に未完成のトークンがあります");
+  const position=p,code=v.getUint16(p,true);p+=2;let value=null;
+  if(code===20){if(p+4>v.byteLength)throw Error("数値データが途中で終了しました");value=v.getInt32(p,true);p+=4}
+  else if(code===668){if(p+8>v.byteLength)throw Error("64ビットデータが途中で終了しました");value=v.getBigUint64(p,true).toString();p+=8}
+  else if(code===15){if(p+2>v.byteLength)throw Error("文字列の長さが読み取れません");const len=v.getUint16(p,true);p+=2;if(p+len>v.byteLength)throw Error("文字列が途中で終了しました");value=decoder.decode(new Uint8Array(buffer,p,len));p+=len}
+  else if(code===0||code===2||code===5||code===6||code===7||code===8||code===9||code===10||code===11||code===12||code===13||code===14||code===16||code===17||code===18||code===19||code===21||code===22||code===23||code===24||code===25||code===26)throw Error("未対応のトークン "+hex(code)+" @"+position);
+  out.push({code,value});
+  if(out.length>4000000)throw Error("トークン数の上限を超えました");
+ }
+ return out;
+}
+function decodeTree(tokens){
+ let i=0;
+ function value(){
+  if(i>=tokens.length)throw Error("構造が途中で終了しました");
+  const t=tokens[i++];
+  if(t.code===3){
+   const rows=[];
+   while(i<tokens.length&&tokens[i].code!==4){
+    if(rows.length>1000000)throw Error("要素数の上限を超えました");
+    if(i+1<tokens.length&&tokens[i+1].code===1){
+     const key=tokens[i].code;i+=2;rows.push({key,value:value()});
+    }else rows.push({key:null,value:value()});
+   }
+   if(i>=tokens.length)throw Error("閉じ括弧のないデータです");
+   i++;return rows;
+  }
+  if(t.code===15||t.code===20)return t.value;
+  if(t.code===668)return {raw64:t.value};
+  throw Error("予期しない値の種類: "+hex(t.code));
+ }
+ const root=[];
+ while(i<tokens.length){
+  if(i+1>=tokens.length||tokens[i+1].code!==1)throw Error("ルート構造を解釈できません（トークン位置 "+i+"）");
+  const key=tokens[i].code;i+=2;root.push({key,value:value()});
+ }
+ return root;
+}
+function field(node,key){return Array.isArray(node)?node.find(x=>x.key===key)?.value:undefined}
+function groupedRows(root){
+ const data=[];
+ function insertFromGroup(list,label,groupId){
+  if(!Array.isArray(list))return;
+  for(const item of list){
+   const n=item.value;
+   if(!Array.isArray(n))continue;
+   const tag=field(n,0x2a02);
+   const blockA=field(n,0x28de),blockB=field(n,0x28df);
+   if(typeof tag!=="string"||!/^[A-Z0-9_]{2,12}$/.test(tag)||!Array.isArray(blockA)||!Array.isArray(blockB))continue;
+   const convert=block=>{
+    const obj={};for(const x of block)if(x.key!==null&&(typeof x.value==="number"||(x.value&&typeof x.value.raw64==="string")))obj[x.key]=typeof x.value==="number"?String(x.value):x.value.raw64;
+    return obj;
+   };
+   data.push({tag,group:label,groupId,a:convert(blockA),b:convert(blockB)});
+  }
+ }
+ insertFromGroup(field(field(root,0x3eae),0xf0),"通常グループ A","A");
+ insertFromGroup(field(field(root,0x3eb0),0xf0),"通常グループ B","B");
+ const mods=field(root,0x3eaf);
+ if(Array.isArray(mods)){
+  for(let j=0;j<mods.length;j++){
+   const block=mods[j].value;
+   if(!Array.isArray(block))continue;
+   const label=field(block,0x1b);
+   const mod=field(block,0x3eaf);
+   insertFromGroup(field(mod,0xf0),"MOD: "+(typeof label==="string"?label:"不明"),"M"+j);
+  }
+ }
+ return data;
+}
+function nonzero(obj){return Object.values(obj).filter(v=>v!=="0").length}
+function val(obj,key){return obj[key]??"0"}
+function asNumber(v){try{return BigInt(v)}catch{return 0n}}
+function sourceOptions(){
+ const groups=[...new Map(records.map(r=>[r.groupId,r.group])).entries()];
+ $("source").replaceChildren(new Option("すべてのグループ",""),...groups.map(([id,label])=>new Option(label,id)));
+}
+function populateMetrics(){
+ const keys=new Set();records.forEach(r=>{Object.keys(r.a).forEach(k=>keys.add(Number(k)));Object.keys(r.b).forEach(k=>keys.add(Number(k)))});
+ metrics=[...keys].sort((a,b)=>a-b);
+ const favorite=metrics.includes(0x3e2b)?0x3e2b:metrics[0];
+ $("metric").replaceChildren(...metrics.map(k=>new Option("統計 ID "+hex(k),String(k))));
+ $("metric").value=String(favorite);
+ $("fields").textContent=metrics.length.toLocaleString("ja-JP");
+}
+function rowCell(tr,txt,cls){const td=document.createElement("td");td.textContent=txt;if(cls)td.className=cls;tr.append(td);return td}
+function draw(){
+ const q=$("search").value.trim().toLowerCase(),source=$("source").value,metric=Number($("metric").value),sort=$("sort").value;
+ visible=records.filter(r=>(!source||source===r.groupId)&&(!q||r.tag.toLowerCase().includes(q)||(names[r.tag]||"").toLowerCase().includes(q)));
+ visible.sort((a,b)=>{
+  if(sort==="tag")return a.tag.localeCompare(b.tag)||a.group.localeCompare(b.group);
+  const av=asNumber(val(a.a,metric))+asNumber(val(a.b,metric)),bv=asNumber(val(b.a,metric))+asNumber(val(b.b,metric));
+  if(av===bv)return a.tag.localeCompare(b.tag);return (av>bv?1:-1)*(sort==="desc"?-1:1);
+ });
+ $("hA").textContent=hex(metric)+" / A";
+ $("hB").textContent=hex(metric)+" / B";
+ $("count").textContent=visible.length+" 件表示（最大 1500 行）";
+ const body=$("tbody");body.replaceChildren();
+ const fragment=document.createDocumentFragment();
+ visible.slice(0,1500).forEach(r=>{
+  const tr=document.createElement("tr");
+  rowCell(tr,r.tag,"tag");rowCell(tr,names[r.tag]||"名称未登録","muted");rowCell(tr,r.group);rowCell(tr,val(r.a,metric),"num");rowCell(tr,val(r.b,metric),"num");rowCell(tr,String(nonzero(r.a)),"num");rowCell(tr,String(nonzero(r.b)),"num");
+  const td=document.createElement("td"),btn=document.createElement("button");btn.type="button";btn.textContent="全項目を見る";btn.addEventListener("click",()=>showDetail(r));td.append(btn);tr.append(td);fragment.append(tr);
+ });
+ body.append(fragment);
+}
+function showDetail(r){
+ $("detailtitle").textContent=r.tag+" / "+(names[r.tag]||"国家名未登録")+" / "+r.group;
+ function fill(id,obj){const body=$(id);body.replaceChildren();const frag=document.createDocumentFragment();Object.keys(obj).map(Number).sort((a,b)=>a-b).forEach(k=>{const tr=document.createElement("tr");rowCell(tr,hex(k),"tag");rowCell(tr,obj[k],"num");frag.append(tr)});body.append(frag)}
+ fill("detailA",r.a);fill("detailB",r.b);$("detail").hidden=false;$("detail").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function csvCell(v){return '"'+String(v).replaceAll('"','""')+'"'}
+function downloadCSV(){
+ const metric=Number($("metric").value);
+ const header=["国家タグ","国家名(参考)","記録グループ","統計ID",hex(metric)+"_A",hex(metric)+"_B","A非ゼロ項目数","B非ゼロ項目数"];
+ const rows=[header,...visible.map(r=>[r.tag,names[r.tag]||"",r.group,hex(metric),val(r.a,metric),val(r.b,metric),nonzero(r.a),nonzero(r.b)])];
+ const content="\ufeff"+rows.map(row=>row.map(csvCell).join(",")).join("\r\n");
+ const url=URL.createObjectURL(new Blob([content],{type:"text/csv;charset=utf-8;"}));
+ const a=document.createElement("a");a.href=url;a.download="hoi4-career-profile-"+activeFile.replace(/[^a-zA-Z0-9_-]/g,"_")+".csv";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+async function load(file){
+ if(!file)return;
+ $("results").hidden=true;$("detail").hidden=true;
+ if(file.size>25*1024*1024){setMessage("25MBを超えるファイルには対応していません",true);return}
+ setMessage("解析中： "+file.name,false);
+ try{
+  await new Promise(resolve=>setTimeout(resolve,25));
+  const buffer=await file.arrayBuffer(),tokens=readTokens(buffer),tree=decodeTree(tokens);
+  const parsed=groupedRows(tree);
+  if(!parsed.length)throw Error("対応する国家タグ付きレコードが見つかりませんでした。別の .pr バージョンかもしれません");
+  records=parsed;activeFile=file.name;
+  $("total").textContent=records.length.toLocaleString("ja-JP");
+  $("countries").textContent=new Set(records.map(r=>r.tag)).size.toLocaleString("ja-JP");
+  $("groups").textContent=new Set(records.map(r=>r.groupId)).size.toLocaleString("ja-JP");
+  sourceOptions();populateMetrics();$("search").value="";$("sort").value="desc";$("results").hidden=false;draw();
+  setMessage("読み込み成功： "+file.name+"。国家タグ付きレコード "+records.length+" 件、国家タグ "+new Set(records.map(r=>r.tag)).size+" 種。生の数値データを表示しています。",false);
+ }catch(e){console.error(e);setMessage("読み込み失敗： "+(e&&e.message?e.message:String(e)),true)}
+}
+$("file").addEventListener("change",e=>load(e.target.files[0]));
+const drop=$("drop");
+for(const name of ["dragenter","dragover"])drop.addEventListener(name,e=>{e.preventDefault();drop.classList.add("over")});
+for(const name of ["dragleave","drop"])drop.addEventListener(name,e=>{e.preventDefault();drop.classList.remove("over")});
+drop.addEventListener("drop",e=>{const f=e.dataTransfer.files[0];load(f)});
+for(const id of ["search","source","metric","sort"])$(id).addEventListener(id==="search"?"input":"change",draw);
+$("download").addEventListener("click",downloadCSV);
+$("close").addEventListener("click",()=>{$("detail").hidden=true});
+})();
+</script>
+</body>
+</html>
