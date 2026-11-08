@@ -8,7 +8,7 @@
 <style>
 :root{color-scheme:dark;--bg:#0b1220;--surface:#142033;--surface2:#1c2b40;--stroke:#314156;--ink:#ecf2fa;--muted:#a6b7cc;--accent:#75c6d2;--accent2:#e3c387}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 10% 0%,#152b3c 0%,var(--bg) 48%);color:var(--ink);font:15px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:1350px;margin:auto;padding:38px 22px 80px}header{margin-bottom:24px}h1{font-size:clamp(24px,4vw,38px);margin:6px 0;font-weight:750;letter-spacing:.01em}h2{font-size:19px;margin:0 0 10px}.eyebrow{letter-spacing:.17em;text-transform:uppercase;font-weight:700;color:var(--accent);font-size:11px}p{margin:8px 0;color:var(--muted)}.lead{max-width:800px}.panel{background:rgba(20,32,51,.96);border:1px solid var(--stroke);border-radius:15px;padding:20px;margin:16px 0;box-shadow:0 9px 30px #0002}.upload{display:block;text-align:center;padding:34px 18px;border:2px dashed #638498;border-radius:13px;cursor:pointer;background:#13293955;transition:.15s}.upload:hover,.upload.over{border-color:var(--accent);background:#19445480}.upload strong{display:block;font-size:19px}.upload span{color:var(--muted)}.upload input{display:none}.notice{border-left:3px solid var(--accent2);padding:10px 13px;background:#1f2835;border-radius:4px;color:#d8d3c4;margin:14px 0}.error{border-left-color:#ff8e8e;color:#ffe0e0}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.stat{padding:15px;border-radius:11px;background:var(--surface2);border:1px solid var(--stroke)}.stat b{display:block;font-size:25px;font-variant-numeric:tabular-nums}.stat span{color:var(--muted);font-size:12px}.filters{display:grid;grid-template-columns:1.35fr 1fr 1.4fr 1fr;gap:14px;align-items:end}.field{min-width:0}.field label{display:block;color:var(--muted);font-size:12px;font-weight:650;margin-bottom:5px}input[type=text],select{width:100%;background:#0b192a;border:1px solid #4a5d71;color:var(--ink);border-radius:9px;padding:11px 12px;font:inherit;min-height:44px}input:focus,select:focus,button:focus-visible,.upload:focus-within{outline:2px solid var(--accent);outline-offset:2px}.actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:14px 0}button{border:1px solid #52687b;background:#23384e;color:var(--ink);padding:9px 13px;border-radius:9px;cursor:pointer;font:inherit;font-weight:650}button:hover{background:#2b4c60}button:disabled{opacity:.5;cursor:not-allowed}.primary{background:#246477;border-color:#4a9fa9}.tablewrap{overflow:auto;max-height:64vh;border:1px solid var(--stroke);border-radius:12px}table{border-collapse:collapse;min-width:840px;width:100%;font-variant-numeric:tabular-nums}th,td{padding:10px 13px;text-align:left;border-bottom:1px solid #2b3c4e;white-space:nowrap}th{position:sticky;top:0;z-index:2;background:#213248;color:#c9ddec;font-size:12px}tbody tr:hover{background:#213749}td.num{text-align:right;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}td.tag{font-family:ui-monospace,Consolas,monospace;font-weight:700;color:var(--accent)}td.muted{color:var(--muted)}.small{font-size:12px;color:var(--muted)}.details{display:grid;grid-template-columns:1fr 1fr;gap:14px}.details>section{min-width:0}.details .tablewrap{max-height:380px}code{color:#b8e1e7}details summary{cursor:pointer;font-weight:700;color:var(--accent)}footer{font-size:12px;color:var(--muted);margin-top:20px}#results[hidden],#detail[hidden]{display:none!important}@media(max-width:850px){.filters{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.details{grid-template-columns:1fr}}@media(max-width:550px){main{padding:20px 12px}.panel{padding:15px}.filters{grid-template-columns:1fr}h1{font-size:26px}}
 </style>
-</head>
+<style>.metriccards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}.metriccard{background:#1c2b40;border:1px solid #314156;border-radius:9px;padding:13px;display:flex;flex-direction:column;gap:3px}.metriccard strong{font-size:22px;font-variant-numeric:tabular-nums}.metriccard small{color:#859ab1}.metricname{font-size:12px;color:#b9c9d9}.statgroup{margin:18px 0}.statgroup h3{font-size:15px;color:#75c6d2}#overviewPanel[hidden]{display:none}</style></head>
 <body>
 <main>
 <header>
@@ -40,7 +40,7 @@
 <div class="tablewrap"><table><thead><tr><th>国家タグ</th><th>国家名（参考）</th><th>記録グループ</th><th id="hA">数値 A</th><th id="hB">数値 B</th><th>Aの非ゼロ項目</th><th>Bの非ゼロ項目</th><th>詳細</th></tr></thead><tbody id="tbody"></tbody></table></div>
 <p class="small">A/Bはファイル内の2つの数値ブロック（内部ID <code>0x28DE</code> / <code>0x28DF</code>）です。意味が未解明のため「勝利数」「プレイ回数」といった名称は付けていません。国家タグは同じでも、グループが異なれば別の行として表示します。</p>
 </section>
-<section id="detail" class="panel" hidden>
+<section id="overviewPanel" class="panel" hidden><div class="actions"><h2 id="overviewTitle">国家別の統計</h2><button id="overviewClose" type="button">閉じる</button></div><p class="small">スクリーンショットの数値と一致した内部IDを中心に表示しています。計算値はファイル内の値から算出した参考値です。未特定の項目や生産割合などは今後の検証対象です。</p><div id="overview"></div></section><section id="detail" class="panel" hidden>
 <div class="actions"><h2 id="detailtitle">詳細</h2><button id="close" type="button">閉じる</button></div>
 <p class="small">ゲーム内表示と照合するための内部ID一覧です。IDは16進数表記。64ビット値は符号なし整数の生値で、表示単位は未解明です。</p>
 <div class="details"><section><h2>統計ブロック A</h2><div class="tablewrap"><table><thead><tr><th>内部ID</th><th>生データ</th></tr></thead><tbody id="detailA"></tbody></table></div></section><section><h2>統計ブロック B</h2><div class="tablewrap"><table><thead><tr><th>内部ID</th><th>生データ</th></tr></thead><tbody id="detailB"></tbody></table></div></section></div>
@@ -52,6 +52,33 @@
 "use strict";
 (function(){
 const $=id=>document.getElementById(id);
+
+const statisticLabels={"4174":["獲得したドクトリンの習熟度","DLC"],"4552":["捕縛された指揮官","DLC"],"4553":["救出された指揮官","DLC"],"3e2b":["プレイスルーの開始","概要"],"3e2f":["解放した国家","概要"],"3e32":["建設した工場","概要"],"3e28":["建造した艦艇","概要"],"3e29":["製造した戦車","概要"],"3e30":["成功したクーデター","概要"],"3e2d":["沈没した海軍の誇り","概要"],"3e2c":["撃墜されたエース","概要"],"3e3e":["最長の戦闘（日）","戦闘"],"3e3f":["最大の戦闘","戦闘"],"3e33":["死亡者最多","戦闘"],"3e25":["敵死亡者最多","戦闘"],"3e38":["戦闘に参加した戦車最多","戦闘"],"3e35":["陸軍最大","戦闘"],"3e36":["海軍最大","戦闘"],"3e37":["空軍最大","戦闘"],"3e54":["侵略戦","戦闘"],"3e55":["防衛戦","戦闘"],"3e2a":["総戦闘回数","戦闘"],"3e6b":["対包囲戦","戦闘"],"3e6c":["航空支援のある戦い","戦闘"],"3ea2":["獲得したプロヴィンス","領土"],"3ea3":["失ったプロヴィンス","領土"],"3ebb":["自軍の死傷者数","損害"],"3eb8":["敵軍の死傷者数","損害"],"416f":["達成した陣営目標","DLC"],"3fed":["完了した特別計画の数","DLC"],"3fee":["襲撃数","DLC"],"3fef":["科学者のレベルアップ数","DLC"],"3e26":["成功した諜報作戦","DLC"],"3e24":["雇用した諜報員","DLC"],"3e23":["捕縛された諜報員","DLC"],"3e1d":["設計した艦艇","DLC"],"3e50":["解禁した提督特性","DLC"],"3e43":["備僚化した国家","DLC"],"3e44":["ライセンスを結んだ外国の軍事技術","DLC"],"3e45":["内戦","DLC"],"3e49":["解禁した将軍特性","DLC"],"3e27":["設計した戦車","DLC"],"3e41":["レンドリースで受領した車両","DLC"],"3e42":["レンドリースで送った車両","DLC"],"3e4a":["義勇軍として送った航空機","DLC"],"3e4c":["製造した列車","DLC"],"3e4f":["廃棄した装備","DLC"],"3f48":["軍需産業組織の規模拡大","DLC"],"3f56":["配備した特殊部隊","DLC"],"3f5e":["市場で販売した装備ユニット数","DLC"],"3ebd":["設計した航空機","DLC"],"3ebc":["雰囲気に昇格した野戦将校","DLC"],"3ec0":["海上哨戒爆撃機で沈めた船","DLC"],"3e4d":["受け入れた亡命政府","DLC"],"3e46":["内戦における最多死傷者","DLC"],"3e47":["内戦における敵の最多死傷者","DLC"]};
+const metricLabel=k=>{const item=statisticLabels[Number(k).toString(16)];return item?item[0]+" ("+hex(Number(k))+")":"未特定 "+hex(Number(k))};
+function formatStat(v){const n=Number(v);if(!Number.isFinite(n))return String(v);const abs=Math.abs(n);if(abs>=1e9)return (n/1e9).toFixed(2)+"G";if(abs>=1e6)return (n/1e6).toFixed(2)+"M";if(abs>=1e4)return (n/1e3).toFixed(2)+"K";return n.toLocaleString("ja-JP")}
+function percent(n,d){const a=Number(n),b=Number(d);return b>0?(100*a/b).toFixed(1)+"%":"データなし"}
+function summaryRows(r){
+const a=r.a,entries=[
+["概要","プレイスルーの開始",0x3e2b],["概要","解放した国家",0x3e2f],["概要","建設した工場",0x3e32],["概要","建造した艦艇",0x3e28],["概要","製造した戦車",0x3e29],["概要","成功したクーデター",0x3e30],["概要","沈没した海軍の誇り",0x3e2d],["概要","撃墜されたエース",0x3e2c],
+["戦闘","最長の戦闘（日）",0x3e3e],["戦闘","最大の戦闘",0x3e3f],["戦闘","死亡者最多",0x3e33],["戦闘","敵死亡者最多",0x3e25],["戦闘","戦闘に参加した戦車最多",0x3e38],["戦闘","陸軍最大",0x3e35],["戦闘","海軍最大",0x3e36],["戦闘","空軍最大",0x3e37],
+["戦闘","侵略戦",0x3e54],["戦闘","防衛戦",0x3e55],["戦闘","総戦闘回数",0x3e2a],["戦闘","対包囲戦",0x3e6b],["戦闘","航空支援のある戦い",0x3e6c],["領土","獲得したプロヴィンス",0x3ea2],["領土","失ったプロヴィンス",0x3ea3],
+["損害","自軍の死傷者数",0x3ebb],["損害","敵軍の死傷者数",0x3eb8],
+["DLC","捕縛された指揮官",0x4552],["DLC","救出された指揮官",0x4553],["DLC","達成した陣営目標",0x416f],["DLC","完了した特別計画の数",0x3fed],["DLC","襲撃数",0x3fee],["DLC","科学者のレベルアップ数",0x3fef],["DLC","成功した諜報作戦",0x3e26],["DLC","雇用した諜報員",0x3e24],["DLC","捕縛された諜報員",0x3e23],["DLC","設計した艦艇",0x3e1d],["DLC","解禁した提督特性",0x3e50],["DLC","備僚化した国家",0x3e43],["DLC","ライセンスを結んだ外国の軍事技術",0x3e44],["DLC","内戦",0x3e45],["DLC","解禁した将軍特性",0x3e49],["DLC","設計した戦車",0x3e27],["DLC","レンドリースで受領した車両",0x3e41],["DLC","レンドリースで送った車両",0x3e42],["DLC","義勇軍として送った航空機",0x3e4a],["DLC","製造した列車",0x3e4c],["DLC","廃棄した装備",0x3e4f],["DLC","軍需産業組織の規模拡大",0x3f48],["DLC","配備した特殊部隊",0x3f56],["DLC","市場で販売した装備ユニット数",0x3f5e],["DLC","獲得したドクトリンの習熟度",0x4174],["DLC","設計した航空機",0x3ebd],["DLC","海上哨戒爆撃機で沈めた船",0x3ec0],["DLC","受け入れた亡命政府",0x3e4d],["DLC","内戦における最多死傷者",0x3e46],["DLC","内戦における敵の最多死傷者",0x3e47]];
+const result=entries.filter(([, ,k])=>Object.hasOwn(a,k)).map(([group,name,k])=>({group,name,id:hex(k),value:formatStat(a[k]),raw:a[k]}));
+const derived=[
+["戦闘","侵略戦比率",percent(a[0x3e54],a[0x3e2a])],["戦闘","対包囲戦比率",percent(a[0x3e6b],a[0x3e2a])],["戦闘","航空支援のある戦いの比率",percent(a[0x3e6c],a[0x3e2a])],
+["損害","自軍死傷者比率",percent(a[0x3ebb],Number(a[0x3ebb]||0)+Number(a[0x3eb8]||0))]
+];
+for(const [group,name,value] of derived)if(value!=="データなし")result.push({group,name,id:"計算値",value,raw:value});
+return result;
+}
+function renderOverview(r){
+const rows=summaryRows(r),root=$("overview"),groups=[...new Set(rows.map(x=>x.group))];root.replaceChildren();
+for(const group of groups){const section=document.createElement("section");section.className="statgroup";const h=document.createElement("h3");h.textContent=group;section.append(h);const grid=document.createElement("div");grid.className="metriccards";for(const row of rows.filter(x=>x.group===group)){const box=document.createElement("div");box.className="metriccard";const name=document.createElement("div");name.className="metricname";name.textContent=row.name;const value=document.createElement("strong");value.textContent=row.value;const id=document.createElement("small");id.textContent=row.id;box.append(name,value,id);grid.append(box)}section.append(grid);root.append(section)}
+$("overviewTitle").textContent=(names[r.tag]||r.tag)+" ("+r.tag+") / "+r.group;
+$("overviewPanel").hidden=false;
+}
+
 const names={GER:"ドイツ",JAP:"日本",ITA:"イタリア",SOV:"ソビエト連邦",USA:"アメリカ",ENG:"イギリス",FRA:"フランス",VIC:"ヴィシー・フランス",POL:"ポーランド",CHI:"中華民国",PRC:"中国共産党",MAN:"満州国",MEN:"蒙古聯合自治政府",ROM:"ルーマニア",HUN:"ハンガリー",BUL:"ブルガリア",FIN:"フィンランド",SWE:"スウェーデン",NOR:"ノルウェー",DEN:"デンマーク",ICE:"アイスランド",SWI:"スイス",AUS:"オーストリア",CZE:"チェコスロバキア",YUG:"ユーゴスラビア",GRE:"ギリシャ",TUR:"トルコ",TAN:"タンヌ・トゥヴァ",MON:"モンゴル",NKO:"北朝鮮",IRQ:"イラク",ALB:"アルバニア",HOL:"オランダ",BEL:"ベルギー",LUX:"ルクセンブルク",POR:"ポルトガル",SPR:"スペイン",SPA:"スペイン国",CAN:"カナダ",AST:"オーストラリア",NZL:"ニュージーランド",RAJ:"イギリス領インド",BRA:"ブラジル",MEX:"メキシコ",ARG:"アルゼンチン",PER:"ペルー",CHL:"チリ",ETH:"エチオピア",SAF:"南アフリカ",SIA:"シャム",PHI:"フィリピン",INS:"インドネシア",MAL:"マラヤ",AFG:"アフガニスタン",SAU:"サウジアラビア",ISR:"イスラエル",KOR:"韓国",GXC:"広西軍閥",YUN:"雲南軍閥",SHX:"山西軍閥",XSM:"馬家軍閥",SIK:"新疆"};
 let records=[],visible=[],metrics=[],activeFile="";
 const hex=id=>"0x"+id.toString(16).toUpperCase().padStart(4,"0");
@@ -141,7 +168,7 @@ function populateMetrics(){
  const keys=new Set();records.forEach(r=>{Object.keys(r.a).forEach(k=>keys.add(Number(k)));Object.keys(r.b).forEach(k=>keys.add(Number(k)))});
  metrics=[...keys].sort((a,b)=>a-b);
  const favorite=metrics.includes(0x3e2b)?0x3e2b:metrics[0];
- $("metric").replaceChildren(...metrics.map(k=>new Option("統計 ID "+hex(k),String(k))));
+ $("metric").replaceChildren(...metrics.map(k=>new Option(metricLabel(k),String(k))));
  $("metric").value=String(favorite);
  $("fields").textContent=metrics.length.toLocaleString("ja-JP");
 }
@@ -162,20 +189,20 @@ function draw(){
  visible.slice(0,1500).forEach(r=>{
   const tr=document.createElement("tr");
   rowCell(tr,r.tag,"tag");rowCell(tr,names[r.tag]||"名称未登録","muted");rowCell(tr,r.group);rowCell(tr,val(r.a,metric),"num");rowCell(tr,val(r.b,metric),"num");rowCell(tr,String(nonzero(r.a)),"num");rowCell(tr,String(nonzero(r.b)),"num");
-  const td=document.createElement("td"),btn=document.createElement("button");btn.type="button";btn.textContent="全項目を見る";btn.addEventListener("click",()=>showDetail(r));td.append(btn);tr.append(td);fragment.append(tr);
+  const td=document.createElement("td"),btn=document.createElement("button");btn.type="button";btn.textContent="統計を見る";btn.addEventListener("click",()=>renderOverview(r));td.append(btn);const raw=document.createElement("button");raw.type="button";raw.textContent="生データ";raw.addEventListener("click",()=>showDetail(r));raw.style.marginLeft="6px";td.append(raw);tr.append(td);fragment.append(tr);
  });
  body.append(fragment);
 }
 function showDetail(r){
  $("detailtitle").textContent=r.tag+" / "+(names[r.tag]||"国家名未登録")+" / "+r.group;
- function fill(id,obj){const body=$(id);body.replaceChildren();const frag=document.createDocumentFragment();Object.keys(obj).map(Number).sort((a,b)=>a-b).forEach(k=>{const tr=document.createElement("tr");rowCell(tr,hex(k),"tag");rowCell(tr,obj[k],"num");frag.append(tr)});body.append(frag)}
+ function fill(id,obj){const body=$(id);body.replaceChildren();const frag=document.createDocumentFragment();Object.keys(obj).map(Number).sort((a,b)=>a-b).forEach(k=>{const tr=document.createElement("tr");rowCell(tr,metricLabel(k),"tag");rowCell(tr,obj[k],"num");frag.append(tr)});body.append(frag)}
  fill("detailA",r.a);fill("detailB",r.b);$("detail").hidden=false;$("detail").scrollIntoView({behavior:"smooth",block:"start"});
 }
 function csvCell(v){return '"'+String(v).replaceAll('"','""')+'"'}
 function downloadCSV(){
  const metric=Number($("metric").value);
- const header=["国家タグ","国家名(参考)","記録グループ","統計ID",hex(metric)+"_A",hex(metric)+"_B","A非ゼロ項目数","B非ゼロ項目数"];
- const rows=[header,...visible.map(r=>[r.tag,names[r.tag]||"",r.group,hex(metric),val(r.a,metric),val(r.b,metric),nonzero(r.a),nonzero(r.b)])];
+ const header=["国家タグ","国家名(参考)","記録グループ","統計ID","統計名",hex(metric)+"_A",hex(metric)+"_B","A非ゼロ項目数","B非ゼロ項目数"];
+ const rows=[header,...visible.map(r=>[r.tag,names[r.tag]||"",r.group,hex(metric),statisticLabels[metric.toString(16)]?.[0]||"未特定",val(r.a,metric),val(r.b,metric),nonzero(r.a),nonzero(r.b)])];
  const content="\ufeff"+rows.map(row=>row.map(csvCell).join(",")).join("\r\n");
  const url=URL.createObjectURL(new Blob([content],{type:"text/csv;charset=utf-8;"}));
  const a=document.createElement("a");a.href=url;a.download="hoi4-career-profile-"+activeFile.replace(/[^a-zA-Z0-9_-]/g,"_")+".csv";document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
@@ -205,7 +232,7 @@ for(const name of ["dragleave","drop"])drop.addEventListener(name,e=>{e.preventD
 drop.addEventListener("drop",e=>{const f=e.dataTransfer.files[0];load(f)});
 for(const id of ["search","source","metric","sort"])$(id).addEventListener(id==="search"?"input":"change",draw);
 $("download").addEventListener("click",downloadCSV);
-$("close").addEventListener("click",()=>{$("detail").hidden=true});
+$("close").addEventListener("click",()=>{$("detail").hidden=true});$("overviewClose").addEventListener("click",()=>{$("overviewPanel").hidden=true});
 })();
 </script>
 </body>
