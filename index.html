@@ -38,7 +38,7 @@
 </div>
 <div class="actions"><span id="count" class="small"></span><button id="download" class="primary" type="button">表示中のデータをCSV保存</button></div>
 <div class="tablewrap"><table><thead><tr><th>国家タグ</th><th>国家名（参考）</th><th>記録グループ</th><th id="hA">数値 A</th><th id="hB">数値 B</th><th>Aの非ゼロ項目</th><th>Bの非ゼロ項目</th><th>詳細</th></tr></thead><tbody id="tbody"></tbody></table></div>
-<p class="small">A/Bはファイル内の2つの数値ブロック（内部ID <code>0x28DE</code> / <code>0x28DF</code>）です。意味が未解明のため「勝利数」「プレイ回数」といった名称は付けていません。国家タグは同じでも、グループが異なれば別の行として表示します。</p>
+<p class="small">A/Bはファイル内の2つの数値ブロック（A：累積値、B：単一プレイスルーの最大値）（内部ID <code>0x28DE</code> / <code>0x28DF</code>）です。意味が未解明のため「勝利数」「プレイ回数」といった名称は付けていません。国家タグは同じでも、グループが異なれば別の行として表示します。</p>
 </section>
 <section id="overviewPanel" class="panel" hidden><div class="actions"><h2 id="overviewTitle">国家別の統計</h2><button id="overviewClose" type="button">閉じる</button></div><p class="small">スクリーンショットの数値と一致した内部IDを中心に表示しています。計算値はファイル内の値から算出した参考値です。未特定の項目や生産割合などは今後の検証対象です。</p><div id="overview"></div></section><section id="detail" class="panel" hidden>
 <div class="actions"><h2 id="detailtitle">詳細</h2><button id="close" type="button">閉じる</button></div>
@@ -53,7 +53,7 @@
 (function(){
 const $=id=>document.getElementById(id);
 
-const statisticLabels={"4174":["獲得したドクトリンの習熟度","DLC"],"4552":["捕縛された指揮官","DLC"],"4553":["救出された指揮官","DLC"],"3e2b":["プレイスルーの開始","概要"],"3e2f":["解放した国家","概要"],"3e32":["建設した工場","概要"],"3e28":["建造した艦艇","概要"],"3e29":["製造した戦車","概要"],"3e30":["成功したクーデター","概要"],"3e2d":["沈没した海軍の誇り","概要"],"3e2c":["撃墜されたエース","概要"],"3e3e":["最長の戦闘（日）","戦闘"],"3e3f":["最大の戦闘","戦闘"],"3e33":["死亡者最多","戦闘"],"3e25":["敵死亡者最多","戦闘"],"3e38":["戦闘に参加した戦車最多","戦闘"],"3e35":["陸軍最大","戦闘"],"3e36":["海軍最大","戦闘"],"3e37":["空軍最大","戦闘"],"3e54":["侵略戦","戦闘"],"3e55":["防衛戦","戦闘"],"3e6b":["対包囲戦","戦闘"],"3e6c":["航空支援のある戦い","戦闘"],"3ea2":["獲得したプロヴィンス","領土"],"3ea3":["失ったプロヴィンス","領土"],"3ebb":["自軍の死傷者数","損害"],"3eb8":["敵軍の死傷者数","損害"],"416f":["達成した陣営目標","DLC"],"3fed":["完了した特別計画の数","DLC"],"3fee":["襲撃数","DLC"],"3fef":["科学者のレベルアップ数","DLC"],"3e26":["成功した諜報作戦","DLC"],"3e24":["雇用した諜報員","DLC"],"3e23":["捕縛された諜報員","DLC"],"3e1d":["設計した艦艇","DLC"],"3e50":["解禁した提督特性","DLC"],"3e43":["備僚化した国家","DLC"],"3e44":["ライセンスを結んだ外国の軍事技術","DLC"],"3e45":["内戦","DLC"],"3e49":["解禁した将軍特性","DLC"],"3e27":["設計した戦車","DLC"],"3e41":["レンドリースで受領した車両","DLC"],"3e42":["レンドリースで送った車両","DLC"],"3e4a":["義勇軍として送った航空機","DLC"],"3e4c":["製造した列車","DLC"],"3e4f":["廃棄した装備","DLC"],"3f48":["軍需産業組織の規模拡大","DLC"],"3f56":["配備した特殊部隊","DLC"],"3f5e":["市場で販売した装備ユニット数","DLC"],"3ebd":["設計した航空機","DLC"],"3ebc":["雰囲気に昇格した野戦将校","DLC"],"3ec0":["海上哨戒爆撃機で沈めた船","DLC"],"3e4d":["受け入れた亡命政府","DLC"],"3e46":["内戦における最多死傷者","DLC"],"3e47":["内戦における敵の最多死傷者","DLC"]};
+const statisticLabels={"4174":["獲得したドクトリンの習熟度","DLC"],"4552":["捕縛された指揮官","DLC"],"4553":["救出された指揮官","DLC"],"3e2b":["プレイスルーの開始","概要"],"3e2a":["プレイ時間（秒）","概要"],"3e3c":["ゲーム内時間（月）","概要"],"3e2e":["世界征服率（10倍値）","概要"],"3e61":["侵略戦と防衛戦の合計","戦闘"],"3e2f":["解放した国家","概要"],"3e32":["建設した工場","概要"],"3e28":["建造した艦艇","概要"],"3e29":["製造した戦車","概要"],"3e30":["成功したクーデター","概要"],"3e2d":["沈没した海軍の誇り","概要"],"3e2c":["撃墜されたエース","概要"],"3e3e":["最長の戦闘（日）","戦闘"],"3e3f":["最大の戦闘","戦闘"],"3e33":["死亡者最多","戦闘"],"3e25":["敵死亡者最多","戦闘"],"3e38":["戦闘に参加した戦車最多","戦闘"],"3e35":["陸軍最大","戦闘"],"3e36":["海軍最大","戦闘"],"3e37":["空軍最大","戦闘"],"3e54":["侵略戦","戦闘"],"3e55":["防衛戦","戦闘"],"3e6b":["対包囲戦","戦闘"],"3e6c":["航空支援のある戦い","戦闘"],"3ea2":["獲得したプロヴィンス","領土"],"3ea3":["失ったプロヴィンス","領土"],"3ebb":["自軍の死傷者数","損害"],"3eb8":["敵軍の死傷者数","損害"],"416f":["達成した陣営目標","DLC"],"3fed":["完了した特別計画の数","DLC"],"3fee":["襲撃数","DLC"],"3fef":["科学者のレベルアップ数","DLC"],"3e26":["成功した諜報作戦","DLC"],"3e24":["雇用した諜報員","DLC"],"3e23":["捕縛された諜報員","DLC"],"3e1d":["設計した艦艇","DLC"],"3e50":["解禁した提督特性","DLC"],"3e43":["備僚化した国家","DLC"],"3e44":["ライセンスを結んだ外国の軍事技術","DLC"],"3e45":["内戦","DLC"],"3e49":["解禁した将軍特性","DLC"],"3e27":["設計した戦車","DLC"],"3e41":["レンドリースで受領した車両","DLC"],"3e42":["レンドリースで送った車両","DLC"],"3e4a":["義勇軍として送った航空機","DLC"],"3e4c":["製造した列車","DLC"],"3e4f":["廃棄した装備","DLC"],"3f48":["軍需産業組織の規模拡大","DLC"],"3f56":["配備した特殊部隊","DLC"],"3f5e":["市場で販売した装備ユニット数","DLC"],"3ebd":["設計した航空機","DLC"],"3ebc":["雰囲気に昇格した野戦将校","DLC"],"3ec0":["海上哨戒爆撃機で沈めた船","DLC"],"3e4d":["受け入れた亡命政府","DLC"],"3e46":["内戦における最多死傷者","DLC"],"3e47":["内戦における敵の最多死傷者","DLC"]};
 const metricLabel=k=>{const item=statisticLabels[Number(k).toString(16)];return item?item[0]+" ("+hex(Number(k))+")":"未特定 "+hex(Number(k))};
 function formatStat(v){const n=Number(v);if(!Number.isFinite(n))return String(v);const abs=Math.abs(n);if(abs>=1e9)return (n/1e9).toFixed(2)+"G";if(abs>=1e6)return (n/1e6).toFixed(2)+"M";if(abs>=1e4)return (n/1e3).toFixed(2)+"K";return n.toLocaleString("ja-JP")}
 function percent(n,d){const a=Number(n),b=Number(d);return b>0?(100*a/b).toFixed(1)+"%":"データなし"}
@@ -61,12 +61,15 @@ function summaryRows(r){
 const a=r.a,entries=[
 ["概要","プレイスルーの開始",0x3e2b],["概要","解放した国家",0x3e2f],["概要","建設した工場",0x3e32],["概要","建造した艦艇",0x3e28],["概要","製造した戦車",0x3e29],["概要","成功したクーデター",0x3e30],["概要","沈没した海軍の誇り",0x3e2d],["概要","撃墜されたエース",0x3e2c],
 ["戦闘","最長の戦闘（日）",0x3e3e],["戦闘","最大の戦闘",0x3e3f],["戦闘","死亡者最多",0x3e33],["戦闘","敵死亡者最多",0x3e25],["戦闘","戦闘に参加した戦車最多",0x3e38],["戦闘","陸軍最大",0x3e35],["戦闘","海軍最大",0x3e36],["戦闘","空軍最大",0x3e37],
-["戦闘","侵略戦",0x3e54],["戦闘","防衛戦",0x3e55],["戦闘","対包囲戦",0x3e6b],["戦闘","航空支援のある戦い",0x3e6c],["領土","獲得したプロヴィンス",0x3ea2],["領土","失ったプロヴィンス",0x3ea3],
+["戦闘","侵略戦",0x3e54],["戦闘","侵略戦と防衛戦の合計",0x3e61],["戦闘","防衛戦",0x3e55],["戦闘","対包囲戦",0x3e6b],["戦闘","航空支援のある戦い",0x3e6c],["領土","獲得したプロヴィンス",0x3ea2],["領土","失ったプロヴィンス",0x3ea3],
 ["損害","自軍の死傷者数",0x3ebb],["損害","敵軍の死傷者数",0x3eb8],
 ["DLC","捕縛された指揮官",0x4552],["DLC","救出された指揮官",0x4553],["DLC","達成した陣営目標",0x416f],["DLC","完了した特別計画の数",0x3fed],["DLC","襲撃数",0x3fee],["DLC","科学者のレベルアップ数",0x3fef],["DLC","成功した諜報作戦",0x3e26],["DLC","雇用した諜報員",0x3e24],["DLC","捕縛された諜報員",0x3e23],["DLC","設計した艦艇",0x3e1d],["DLC","解禁した提督特性",0x3e50],["DLC","傀儡化した国家",0x3e43],["DLC","ライセンスを結んだ外国の軍事技術",0x3e44],["DLC","内戦",0x3e45],["DLC","解禁した将軍特性",0x3e49],["DLC","設計した戦車",0x3e27],["DLC","レンドリースで受領した車両",0x3e41],["DLC","レンドリースで送った車両",0x3e42],["DLC","義勇軍として送った航空機",0x3e4a],["DLC","製造した列車",0x3e4c],["DLC","廃棄した装備",0x3e4f],["DLC","軍需産業組織の規模拡大",0x3f48],["DLC","配備した特殊部隊",0x3f56],["DLC","市場で販売した装備ユニット数",0x3f5e],["DLC","獲得したドクトリンの習熟度",0x4174],["DLC","設計した航空機",0x3ebd],["DLC","海上哨戒爆撃機で沈めた船",0x3ec0],["DLC","受け入れた亡命政府",0x3e4d],["DLC","内戦における最多死傷者",0x3e46],["DLC","内戦における敵の最多死傷者",0x3e47]];
 const result=entries.filter(([, ,k])=>Object.hasOwn(a,k)).map(([group,name,k])=>({group,name,id:hex(k),value:formatStat(a[k]),raw:a[k]}));
+if(a[0x3e3c]!==undefined){const months=Number(a[0x3e3c]);result.unshift({group:"概要",name:"ゲーム内時間",id:"0x3E3C",value:Math.floor(months/12)+"年"+months%12+"か月",raw:a[0x3e3c]})}
+if(a[0x3e2a]!==undefined)result.unshift({group:"概要",name:"プレイ時間",id:"0x3E2A",value:Math.floor(Number(a[0x3e2a])/3600)+"時間",raw:a[0x3e2a]});
+if(a[0x3e2e]!==undefined)result.unshift({group:"概要",name:"世界征服率",id:"0x3E2E",value:(Number(a[0x3e2e])/10).toFixed(1)+"%",raw:a[0x3e2e]});
 const derived=[
-["戦闘","侵略戦比率",percent(a[0x3e54],Number(a[0x3e54]||0)+Number(a[0x3e55]||0))],["戦闘","対包囲戦比率",percent(a[0x3e6b],Number(a[0x3e54]||0)+Number(a[0x3e55]||0))],["戦闘","航空支援のある戦いの比率",percent(a[0x3e6c],Number(a[0x3e54]||0)+Number(a[0x3e55]||0))],
+["戦闘","侵略戦比率",percent(a[0x3e54],a[0x3e61])],["戦闘","対包囲戦比率",percent(a[0x3e6b],a[0x3e61])],["戦闘","航空支援のある戦いの比率",percent(a[0x3e6c],a[0x3e61])],
 ["損害","自軍死傷者比率",percent(a[0x3ebb],Number(a[0x3ebb]||0)+Number(a[0x3eb8]||0))]
 ];
 for(const [group,name,value] of derived)if(value!=="データなし")result.push({group,name,id:"計算値",value,raw:value});
@@ -143,8 +146,8 @@ function groupedRows(root){
    data.push({tag,group:label,groupId,a:convert(blockA),b:convert(blockB)});
   }
  }
- insertFromGroup(field(field(root,0x3eae),0xf0),"データ群 A","A");
- insertFromGroup(field(field(root,0x3eb0),0xf0),"データ群 B","B");
+ insertFromGroup(field(field(root,0x3eae),0xf0),"バニラ","A");
+ insertFromGroup(field(field(root,0x3eb0),0xf0),"MOD（全MOD統合）","B");
  const mods=field(root,0x3eaf);
  if(Array.isArray(mods)){
   for(let j=0;j<mods.length;j++){
