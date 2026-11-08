@@ -40,7 +40,7 @@
 <div class="tablewrap"><table><thead><tr><th>国家タグ</th><th>国家名（参考）</th><th>記録グループ</th><th id="hA">数値 A</th><th id="hB">数値 B</th><th>Aの非ゼロ項目</th><th>Bの非ゼロ項目</th><th>詳細</th></tr></thead><tbody id="tbody"></tbody></table></div>
 <p class="small">A/Bはファイル内の2つの数値ブロック（A：累積値、B：単一プレイスルーの最大値）（内部ID <code>0x28DE</code> / <code>0x28DF</code>）です。意味が未解明のため「勝利数」「プレイ回数」といった名称は付けていません。国家タグは同じでも、グループが異なれば別の行として表示します。</p>
 </section>
-<section id="overviewPanel" class="panel" hidden><div class="actions"><h2 id="overviewTitle">国家別の統計</h2><button id="overviewClose" type="button">閉じる</button></div><p class="small">スクリーンショットの数値と一致した内部IDを中心に表示しています。計算値はファイル内の値から算出した参考値です。未特定の項目や生産割合などは今後の検証対象です。</p><div id="overview"></div></section><section id="detail" class="panel" hidden>
+<section id="overviewPanel" class="panel" hidden><div class="actions"><h2 id="overviewTitle">国家別の統計</h2><button id="overviewClose" type="button">閉じる</button></div><p class="small">スクリーンショットの数値と照合した統計を表示しています。年代別建設割合は該当期間の民需・軍需・造船所・ロケット発射場の建設数から計算します。軍事生産割合とドクトリン割合は引き続き検証対象です。</p><div id="overview"></div></section><section id="detail" class="panel" hidden>
 <div class="actions"><h2 id="detailtitle">詳細</h2><button id="close" type="button">閉じる</button></div>
 <p class="small">ゲーム内表示と照合するための内部ID一覧です。IDは16進数表記。64ビット値は符号なし整数の生値で、表示単位は未解明です。</p>
 <div class="details"><section><h2>統計ブロック A</h2><div class="tablewrap"><table><thead><tr><th>内部ID</th><th>生データ</th></tr></thead><tbody id="detailA"></tbody></table></div></section><section><h2>統計ブロック B</h2><div class="tablewrap"><table><thead><tr><th>内部ID</th><th>生データ</th></tr></thead><tbody id="detailB"></tbody></table></div></section></div>
@@ -53,8 +53,9 @@
 (function(){
 const $=id=>document.getElementById(id);
 
+const constructionLabels={"3ec4":["1940年以前・民需工場","建設"],"3ec5":["1940～1944年・民需工場","建設"],"3ec6":["1945年以降・民需工場","建設"],"3ec7":["1940年以前・軍需工場","建設"],"3ec8":["1940～1944年・軍需工場","建設"],"3ec9":["1945年以降・軍需工場","建設"],"3eca":["1940年以前・造船所","建設"],"3ecb":["1940～1944年・造船所","建設"],"3ecc":["1945年以降・造船所","建設"],"3ecd":["1940年以前・ロケット発射場","建設"],"3ece":["1940～1944年・ロケット発射場","建設"],"3ecf":["1945年以降・ロケット発射場","建設"]};
 const statisticLabels={"4174":["獲得したドクトリンの習熟度","DLC"],"4552":["捕縛された指揮官","DLC"],"4553":["救出された指揮官","DLC"],"3e2b":["プレイスルーの開始","概要"],"3e2a":["プレイ時間（秒）","概要"],"3e3c":["ゲーム内時間（月）","概要"],"3e2e":["世界征服率（10倍値）","概要"],"3e61":["侵略戦と防衛戦の合計","戦闘"],"3e2f":["解放した国家","概要"],"3e32":["建設した工場","概要"],"3e28":["建造した艦艇","概要"],"3e29":["製造した戦車","概要"],"3e30":["成功したクーデター","概要"],"3e2d":["沈没した海軍の誇り","概要"],"3e2c":["撃墜されたエース","概要"],"3e3e":["最長の戦闘（日）","戦闘"],"3e3f":["最大の戦闘","戦闘"],"3e33":["死亡者最多","戦闘"],"3e25":["敵死亡者最多","戦闘"],"3e38":["戦闘に参加した戦車最多","戦闘"],"3e35":["陸軍最大","戦闘"],"3e36":["海軍最大","戦闘"],"3e37":["空軍最大","戦闘"],"3e54":["侵略戦","戦闘"],"3e55":["防衛戦","戦闘"],"3e6b":["対包囲戦","戦闘"],"3e6c":["航空支援のある戦い","戦闘"],"3ea2":["獲得したプロヴィンス","領土"],"3ea3":["失ったプロヴィンス","領土"],"3ebb":["自軍の死傷者数","損害"],"3eb8":["敵軍の死傷者数","損害"],"416f":["達成した陣営目標","DLC"],"3fed":["完了した特別計画の数","DLC"],"3fee":["襲撃数","DLC"],"3fef":["科学者のレベルアップ数","DLC"],"3e26":["成功した諜報作戦","DLC"],"3e24":["雇用した諜報員","DLC"],"3e23":["捕縛された諜報員","DLC"],"3e1d":["設計した艦艇","DLC"],"3e50":["解禁した提督特性","DLC"],"3e43":["備僚化した国家","DLC"],"3e44":["ライセンスを結んだ外国の軍事技術","DLC"],"3e45":["内戦","DLC"],"3e49":["解禁した将軍特性","DLC"],"3e27":["設計した戦車","DLC"],"3e41":["レンドリースで受領した車両","DLC"],"3e42":["レンドリースで送った車両","DLC"],"3e4a":["義勇軍として送った航空機","DLC"],"3e4c":["製造した列車","DLC"],"3e4f":["廃棄した装備","DLC"],"3f48":["軍需産業組織の規模拡大","DLC"],"3f56":["配備した特殊部隊","DLC"],"3f5e":["市場で販売した装備ユニット数","DLC"],"3ebd":["設計した航空機","DLC"],"3ebc":["雰囲気に昇格した野戦将校","DLC"],"3ec0":["海上哨戒爆撃機で沈めた船","DLC"],"3e4d":["受け入れた亡命政府","DLC"],"3e46":["内戦における最多死傷者","DLC"],"3e47":["内戦における敵の最多死傷者","DLC"]};
-const metricLabel=k=>{const item=statisticLabels[Number(k).toString(16)];return item?item[0]+" ("+hex(Number(k))+")":"未特定 "+hex(Number(k))};
+const metricLabel=k=>{const item=statisticLabels[Number(k).toString(16)]||constructionLabels[Number(k).toString(16)];return item?item[0]+" ("+hex(Number(k))+")":"未特定 "+hex(Number(k))};
 function formatStat(v){const n=Number(v);if(!Number.isFinite(n))return String(v);const abs=Math.abs(n);if(abs>=1e9)return (n/1e9).toFixed(2)+"G";if(abs>=1e6)return (n/1e6).toFixed(2)+"M";if(abs>=1e4)return (n/1e3).toFixed(2)+"K";return n.toLocaleString("ja-JP")}
 function percent(n,d){const a=Number(n),b=Number(d);return b>0?(100*a/b).toFixed(1)+"%":"データなし"}
 function summaryRows(r){
@@ -68,6 +69,16 @@ const result=entries.filter(([, ,k])=>Object.hasOwn(a,k)).map(([group,name,k])=>
 if(a[0x3e3c]!==undefined){const months=Number(a[0x3e3c]);result.unshift({group:"概要",name:"ゲーム内時間",id:"0x3E3C",value:Math.floor(months/12)+"年"+months%12+"か月",raw:a[0x3e3c]})}
 if(a[0x3e2a]!==undefined)result.unshift({group:"概要",name:"プレイ時間",id:"0x3E2A",value:Math.floor(Number(a[0x3e2a])/3600)+"時間",raw:a[0x3e2a]});
 if(a[0x3e2e]!==undefined)result.unshift({group:"概要",name:"世界征服率",id:"0x3E2E",value:(Number(a[0x3e2e])/10).toFixed(1)+"%",raw:a[0x3e2e]});
+const periods=["1940年以前","1940～1944年","1945年以降"];
+const buildingTypes=[["民需工場",0x3ec4],["軍需工場",0x3ec7],["造船所",0x3eca],["ロケット発射場",0x3ecd]];
+for(let j=0;j<3;j++){
+ const total=buildingTypes.reduce((sum,[,start])=>sum+Number(a[start+j]||0),0);
+ if(total===0)continue;
+ for(const [name,start] of buildingTypes){
+  const key=start+j;
+  result.push({group:"建設割合",name:periods[j]+"・"+name,id:hex(key),value:percent(a[key],total),raw:a[key]});
+ }
+}
 const derived=[
 ["戦闘","侵略戦比率",percent(a[0x3e54],a[0x3e61])],["戦闘","対包囲戦比率",percent(a[0x3e6b],a[0x3e61])],["戦闘","航空支援のある戦いの比率",percent(a[0x3e6c],a[0x3e61])],
 ["損害","自軍死傷者比率",percent(a[0x3ebb],Number(a[0x3ebb]||0)+Number(a[0x3eb8]||0))]
